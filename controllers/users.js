@@ -13,7 +13,7 @@ module.exports.createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => {
-      res.send(user);
+      res.status(201).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -27,7 +27,7 @@ module.exports.createUser = (req, res) => {
 module.exports.getAllUsers = (_, res) => {
   User.find({})
     .then((users) => {
-      res.send(users);
+      res.status(201).send(users);
     })
     .catch((err) => {
       sendError(res, new InternalServerError(err.message, err.name));
@@ -36,11 +36,9 @@ module.exports.getAllUsers = (_, res) => {
 
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
+    .orFail(new NotFound(userNotFound))
     .then((user) => {
-      if (!user) {
-        throw new NotFound(userNotFound);
-      }
-      res.send(user);
+      res.status(201).send(user);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -61,11 +59,14 @@ module.exports.updateUserProfile = (req, res) => {
     { name, about },
     { new: true, runValidators: true },
   )
+    .orFail(new NotFound(userNotFound))
     .then((user) => {
-      res.send(user);
+      res.status(201).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'NotFound') {
+        sendError(res, err);
+      } else if (err.name === 'ValidationError' || err.name === 'CastError') {
         sendError(res, new BadRequest(updateProfile));
       } else {
         sendError(res, new InternalServerError(err.message, err.name));
@@ -81,11 +82,14 @@ module.exports.updateUserAvatar = (req, res) => {
     { avatar },
     { new: true, runValidators: true },
   )
+    .orFail(new NotFound(userNotFound))
     .then((user) => {
-      res.send(user);
+      res.status(201).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'NotFound') {
+        sendError(res, err);
+      } else if (err.name === 'ValidationError' || err.name === 'CastError') {
         sendError(res, new BadRequest(updateAvatar));
       } else {
         sendError(res, new InternalServerError(err.message, err.name));

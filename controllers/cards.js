@@ -11,7 +11,7 @@ const Card = require('../models/card');
 module.exports.getAllCards = (_, res) => {
   Card.find({})
     .then((cards) => {
-      res.send(cards);
+      res.status(201).send(cards);
     })
     .catch((err) => {
       sendError(res, new InternalServerError(err.message, err.name));
@@ -23,7 +23,7 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
-      res.send(card);
+      res.status(201).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -36,11 +36,9 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
+    .orFail(new NotFound(cardNotFound))
     .then((card) => {
-      if (!card) {
-        throw new NotFound(cardNotFound);
-      }
-      res.send(card);
+      res.status(201).send(card);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -59,11 +57,9 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true, runValidators: true },
   )
+    .orFail(new NotFound(cardNotFound))
     .then((card) => {
-      if (!card) {
-        throw new NotFound(cardNotFound);
-      }
-      res.send(card);
+      res.status(201).send(card);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -82,11 +78,9 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true, runValidators: true },
   )
+    .orFail(new NotFound(cardNotFound))
     .then((card) => {
-      if (!card) {
-        throw new NotFound(cardNotFound);
-      }
-      res.send(card);
+      res.status(201).send(card);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
