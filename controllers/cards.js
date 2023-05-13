@@ -45,6 +45,8 @@ module.exports.deleteCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFound') {
         sendError(res, err);
+      } else if (err.name === 'CastError') {
+        sendError(res, new BadRequest(cardNotFound));
       } else {
         sendError(res, new InternalServerError(err.message, err.name));
       }

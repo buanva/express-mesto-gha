@@ -45,6 +45,8 @@ module.exports.getUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'NotFound') {
         sendError(res, err);
+      } else if (err.name === 'CastError') {
+        sendError(res, new BadRequest(userNotFound));
       } else {
         sendError(res, new InternalServerError(err.message, err.name));
       }

@@ -4,6 +4,10 @@ const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 
+const { NotFound } = require('./errors/MyError');
+const { pageNotFound } = require('./errors/messages');
+const { sendError } = require('./helpers/sendError');
+
 const { PORT = 3000 } = process.env;
 const app = express();
 
@@ -15,8 +19,10 @@ app.use((req, _, next) => {
 
   next();
 });
-app.use('/', usersRouter);
-app.use('/', cardsRouter);
+app.use('/', usersRouter, cardsRouter);
+app.use((_, res) => {
+  sendError(res, new NotFound(pageNotFound));
+});
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
