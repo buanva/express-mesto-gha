@@ -27,7 +27,7 @@ module.exports.createUser = (req, res) => {
 module.exports.getAllUsers = (_, res) => {
   User.find({})
     .then((users) => {
-      res.status(201).send(users);
+      res.send(users);
     })
     .catch((err) => {
       sendError(res, new InternalServerError(err.message, err.name));
@@ -38,7 +38,7 @@ module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .orFail(new NotFound(userNotFound))
     .then((user) => {
-      res.status(201).send(user);
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -61,7 +61,7 @@ module.exports.updateUserProfile = (req, res) => {
   )
     .orFail(new NotFound(userNotFound))
     .then((user) => {
-      res.status(201).send(user);
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -84,7 +84,7 @@ module.exports.updateUserAvatar = (req, res) => {
   )
     .orFail(new NotFound(userNotFound))
     .then((user) => {
-      res.status(201).send(user);
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {

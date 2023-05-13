@@ -11,7 +11,7 @@ const Card = require('../models/card');
 module.exports.getAllCards = (_, res) => {
   Card.find({})
     .then((cards) => {
-      res.status(201).send(cards);
+      res.send(cards);
     })
     .catch((err) => {
       sendError(res, new InternalServerError(err.message, err.name));
@@ -38,7 +38,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .orFail(new NotFound(cardNotFound))
     .then((card) => {
-      res.status(201).send(card);
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -59,7 +59,7 @@ module.exports.likeCard = (req, res) => {
   )
     .orFail(new NotFound(cardNotFound))
     .then((card) => {
-      res.status(201).send(card);
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -80,7 +80,7 @@ module.exports.dislikeCard = (req, res) => {
   )
     .orFail(new NotFound(cardNotFound))
     .then((card) => {
-      res.status(201).send(card);
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'NotFound') {
