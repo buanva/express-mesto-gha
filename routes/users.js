@@ -16,9 +16,9 @@ const router = express.Router();
 
 router.get('/users', getAllUsers);
 
-router.get('/users/:userId', validateGetUser, getUser);
-
 router.get('/users/me', getCurrentUser);
+
+router.get('/users/:userId', validateGetUser, getUser);
 
 router.patch('/users/me', validateUpdateProfile, updateUserProfile);
 
