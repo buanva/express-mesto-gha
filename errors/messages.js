@@ -8,4 +8,10 @@ module.exports = {
   userNotFound: 'Пользователь с указанным _id не найден',
   cardNotFound: 'Карточка с указанным _id не найдена',
   pageNotFound: 'Страница не найдена',
+  emailIncorrect: 'Введён некорректный email-адрес',
+  unauthorized: 'Неправильная почта или пароль',
+  needAuthorize: 'Необходима авторизация',
+  conflict: 'Пользователь с таким E-mail уже зарегистрирован',
+  linkIncorrect: 'Введена некорректная ссылка',
+  forbidden: 'Недостаточно прав',
 };
