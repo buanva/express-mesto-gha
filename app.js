@@ -10,7 +10,6 @@ const cardsRouter = require('./routes/cards');
 
 const { NotFound } = require('./errors/MyError');
 const { pageNotFound } = require('./errors/messages');
-const { sendError } = require('./helpers/sendError');
 
 const {
   validateLogin,
@@ -31,8 +30,8 @@ app.post('/signup', validateCreateUser, createUser);
 app.use(auth);
 
 app.use('/', usersRouter, cardsRouter);
-app.use((_, res) => {
-  sendError(res, new NotFound(pageNotFound));
+app.use((_, res, next) => {
+  next(new NotFound(pageNotFound));
 });
 
 app.use(errors());

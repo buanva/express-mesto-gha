@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { BadRequest } = require('../errors/MyError');
+const { BadRequest, Conflict } = require('../errors/MyError');
 
 const {
-  userNotFound,
+  userNotFound, conflict,
 } = require('../errors/messages');
 const User = require('../models/user');
 
@@ -21,7 +21,13 @@ module.exports.createUser = (req, res, next) => {
       res.status(201).send(user);
     })
     .catch((err) => {
-      next(err.name === 'ValidationError' ? new BadRequest(err.errors[Object.keys(err.errors)[0]].message) : err);
+      if (err.name === 'ValidationError') {
+        next(new BadRequest(err.errors[Object.keys(err.errors)[0]].message));
+      } else if (err.code === 11000) {
+        next(new Conflict(conflict));
+      } else {
+        next(err);
+      }
     });
 };
 

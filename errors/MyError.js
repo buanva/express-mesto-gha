@@ -5,7 +5,6 @@ class MyError extends Error {
     this.statusCode = code;
   }
 }
-module.exports.MyError = MyError;
 
 module.exports.BadRequest = class BadRequest extends MyError {
   constructor(message, code = 400) {
@@ -39,12 +38,5 @@ module.exports.Conflict = class Conflict extends MyError {
   constructor(message, code = 409) {
     super(message, code);
     this.name = 'Conflict';
-  }
-};
-
-module.exports.InternalServerError = class InternalServerError extends MyError {
-  constructor(message, name, code = 500) {
-    super(`Произошла неизвестная ошибка ${name}: ${message}`, code);
-    this.name = name;
   }
 };
